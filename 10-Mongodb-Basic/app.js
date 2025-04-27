@@ -1,9 +1,9 @@
+require("dotenv").config();
+
 const mongoose = require("mongoose");
 
 mongoose
-  .connect(
-    "mongodb+srv://asjadali5968:asjadali2002@cluster0.nrqaapa.mongodb.net/"
-  )
+  .connect(process.env.MONGOOSE_KEY)
   .then(() => console.log("connected to database successfully"))
   .catch((e) => console.log(e));
 
@@ -20,14 +20,16 @@ const user = mongoose.model("user", userSchema);
 
 async function CreateUser() {
   try {
-    // const Newuser = await user.create({
-    //   name: "ajad ali",
-    //   password: "hallo World",
-    //   age: 30,
-    //   isActive: true,
-    //   tags: ["dev", "web&app", "Next.js"],
-    // });
-    // console.log(Newuser);
+    //add new user
+
+    const Newuser = await user.create({
+      name: "ahmad hassan",
+      password: "new coded",
+      age: 30,
+      isActive: true,
+      tags: ["dev", "web&app", "Next.js"],
+    });
+    console.log(Newuser);
 
     // query to find all user
 
