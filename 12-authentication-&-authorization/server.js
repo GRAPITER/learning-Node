@@ -4,6 +4,7 @@ const connectDB = require("./database/auth-db");
 const authRouter = require("./auth-routes/routes");
 const homeRouter = require("./auth-routes/home");
 const adminRouter = require("./auth-routes/admin");
+const ImageRouter = require("./auth-routes/imageRoute");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -11,6 +12,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 connectDB();
 //router with default path
+app.use("/api/image", ImageRouter);
 app.use("/api/auth", authRouter);
 
 app.use("/api/home", homeRouter);
