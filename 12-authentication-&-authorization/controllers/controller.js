@@ -94,4 +94,59 @@ async function handleLogin(req, res) {
   }
 }
 
-module.exports = { handleRegister, handleLogin };
+async function changePassword(req, res) {
+  try {
+    //get userID from token
+    const userId = req.userInfo.id;
+
+    if (!userId) {
+      res.status(404).json({
+        success: false,
+        message: "there is no user found",
+      });
+    }
+
+    // get old and new pass from body req which user send
+
+    const { oldPassword, newPassword } = req.body;
+
+    //find existing user from db
+    const existUser = await userModal.findById(userId);
+    //comapare the passwoord user enter comapare with the existing password
+    const compare = await bcrypt.compare(oldPassword, existUser.password);
+
+    if (!compare) {
+      res.status(404).json({
+        success: false,
+        message: " old password not match",
+      });
+    }
+
+    //hash new password
+    const salt = await bcrypt.genSalt(12);
+    const hashNewPassword = await bcrypt.hash(newPassword, salt);
+
+    //now store new password in db
+
+    const updated = await userModal.findByIdAndUpdate(
+      userId,
+      { password: hashNewPassword },
+      { new: true }
+    );
+    if (updated) {
+      res.status(202).json({
+        success: true,
+        message: "password updated susscessfully",
+        passsowrd: updated,
+      });
+    }
+  } catch (error) {
+    console.log("there is an error", error);
+    res.status(404).json({
+      success: false,
+      message: "there is an error for changing password",
+    });
+  }
+}
+
+module.exports = { handleRegister, handleLogin, changePassword };
